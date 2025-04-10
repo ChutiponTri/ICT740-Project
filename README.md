@@ -37,7 +37,9 @@ python frontend/main.py
 
 ### Backend
 To run the backend, make sure to navigate to the root directory of the project and then start the FastAPI server:
+```bash
 python backend/backend.py
+```
 
 ## Notes
 - The backend service must be run from the root directory to work correctly.
