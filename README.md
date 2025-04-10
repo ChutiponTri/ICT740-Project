@@ -23,13 +23,17 @@ Contains the pre-trained model used for classification.
 ## Requirements
 
 Make sure to install the required dependencies by running:
+```bash
 pip install -r requirements.txt
+```
 
 ## Running the Project
 
 ### Frontend
 To run the frontend, simply execute the `main.py` file:
+```bash
 python frontend/main.py
+```
 
 ### Backend
 To run the backend, make sure to navigate to the root directory of the project and then start the FastAPI server:
