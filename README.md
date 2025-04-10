@@ -1,2 +1,51 @@
-# ICT740-Project
-Demo Idea for ICT740 Hardware Design
+ICT740-Project
+This project demonstrates a hardware design for the ICT740 course, featuring both frontend and backend components for image classification.
+
+Project Structure
+The project is organized into several folders and files:
+
+Frontend Folder
+api.py: Contains a class for making requests to the backend API, which is linked with the number recognition model.
+
+camera.py: Implements a camera window for capturing images, which are sent to the backend for classification.
+
+draw.py: Provides a window for drawing or writing numbers, which are then sent to the backend for classification.
+
+equation.py: A class for generating random equations (custom library).
+
+main.py: Main entry point for the UI, allowing the user to select modes and choose the camera.
+
+Backend Folder
+AI.py: Connects with the model to perform classification on the input data.
+
+backend.py: Runs the FastAPI backend server, which handles classification requests.
+
+Model Folder
+Contains the pre-trained model used for classification.
+
+Requirements
+Make sure to install the required dependencies by running:
+
+nginx
+Copy
+Edit
+pip install -r requirements.txt
+Running the Project
+Frontend
+To run the frontend, simply execute the main.py file:
+
+bash
+Copy
+Edit
+python frontend/main.py
+Backend
+To run the backend, make sure to navigate to the root directory of the project and then start the FastAPI server:
+
+bash
+Copy
+Edit
+python backend/backend.py
+Notes
+The backend service must be run from the root directory to work correctly.
+
+The frontend uses camera capture and drawing windows, allowing the user to interact with the number recognition system.
