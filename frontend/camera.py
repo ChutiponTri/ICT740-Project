@@ -82,6 +82,7 @@ class CameraWindow(QMainWindow):
     # Function to Generate Random Equation
     def clear_pred(self):
         self.result.setText("Press Predict Button to See Result")
+        self.cameraThread.reset()
 
     # Function to Request API Prediction
     def predict(self):
@@ -122,6 +123,7 @@ class CameraThread(QThread):
         self.camera_index = camera_index
         self.running = False
         self.last_frame = None
+        self.flag = True
 
     def run(self):
         self.running = True
@@ -130,7 +132,8 @@ class CameraThread(QThread):
             ret, frame = cap.read()
             if ret:
                 self.last_frame = frame
-                self.frameCaptured.emit(frame)
+                if self.flag:
+                    self.frameCaptured.emit(frame)
                 time.sleep(0.033)  # ~30 FPS
             else:
                 break
@@ -139,7 +142,11 @@ class CameraThread(QThread):
     def stop(self):
         self.running = False
 
+    def reset(self):
+        self.flag = True
+
     def get_last_frame(self):
+        self.flag = False
         return self.last_frame
 
 if __name__ == "__main__":
