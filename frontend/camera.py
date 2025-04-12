@@ -1,7 +1,6 @@
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy
 from PyQt6.QtCore import QThread, pyqtSignal, Qt
 from PyQt6.QtGui import QImage, QPixmap, QFont
-from equation import Equation
 from io import BytesIO
 from PIL import Image
 from api import API
@@ -13,7 +12,7 @@ font = QFont("Cordia New", 16)
 
 class CameraWindow(QMainWindow):
     signal = pyqtSignal()
-    def __init__(self, index, mode):
+    def __init__(self, index):
         super().__init__()
         self.setWindowTitle("Camera Feed")
         self.setGeometry(100, 100, 800, 600)
@@ -21,23 +20,20 @@ class CameraWindow(QMainWindow):
             index = int(index)
         except ValueError:
             index = 0
-        self.mode = mode
 
         # Central widget and layout
         centralWidget = QWidget()
         self.setCentralWidget(centralWidget)
 
         # Create Buttons
-        random_button = QPushButton("Random")
+        clear_button = QPushButton("Clear")
         predict_button = QPushButton("Predict")
-        self.equation = QLabel("Equation: Unknown")
-        self.result = QLabel("")
+        self.result = QLabel("Press Predict Button to See Result")
         self.videoLabel = QLabel("")
 
         # Setting Button Font
-        random_button.setFont(font)
+        clear_button.setFont(font)
         predict_button.setFont(font)
-        self.equation.setFont(font)
         self.result.setFont(font)
 
         # Setting Video Label
@@ -46,18 +42,17 @@ class CameraWindow(QMainWindow):
         self.videoLabel.setMinimumSize(self.size())
 
         # Button Functionalities
-        random_button.clicked.connect(self.random_equation)
+        clear_button.clicked.connect(self.clear_pred)
         predict_button.clicked.connect(self.predict)
 
         # Button Layout
         button_layout = QHBoxLayout()
-        button_layout.addWidget(random_button)
         button_layout.addWidget(predict_button)
+        button_layout.addWidget(clear_button)
         button_layout.addStretch(1)
 
         # Predict Layout
         pred_layout = QHBoxLayout()
-        pred_layout.addWidget(self.equation)
         pred_layout.addWidget(self.result)
 
         # QLabel for displaying video feed
@@ -85,10 +80,8 @@ class CameraWindow(QMainWindow):
         self.videoLabel.setPixmap(pixmap.scaled(self.videoLabel.size(), Qt.AspectRatioMode.KeepAspectRatio))
 
     # Function to Generate Random Equation
-    def random_equation(self):
-        equation = Equation.random(self.mode)
-        self.equation.setText(equation)
-        self.result.setText("")
+    def clear_pred(self):
+        self.result.setText("Press Predict Button to See Result")
 
     # Function to Request API Prediction
     def predict(self):
@@ -112,10 +105,8 @@ class CameraWindow(QMainWindow):
     def update_label(self, data):
         print(data)
         if "prediction" in data.keys():
-            if "Unknown" not in self.equation.text():
-                equation = self.equation.text()
-                self.equation.setText(f"{equation} = {eval(equation)}")
             result = data["prediction"]
+            result = ", ".join(result)
             self.result.setText(f"Prediction Result: {result}")
 
     # Ensure camera stops when the window is closed

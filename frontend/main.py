@@ -24,10 +24,8 @@ class MainWindow(QMainWindow):
         mode_label = QLabel("Please Select Mode")
         self.mode_box = QComboBox()
         label_1 = QLabel("Welcome to our Program")
-        label_2 = QLabel("Please Select Mode")
-        easy = QPushButton("Easy")
-        med = QPushButton("Medium")
-        hard = QPushButton("Hard")
+        label_2 = QLabel("Please Press Start when You are Ready")
+        start = QPushButton("Start")
 
         # Set Elements Font
         label_1.setFont(QFont("Cordia New", 20, QFont.Weight.Bold))
@@ -36,9 +34,7 @@ class MainWindow(QMainWindow):
         self.mode_box.setFont(font)
         camera_label.setFont(font)
         self.camera_box.setFont(font)
-        easy.setFont(font)
-        med.setFont(font)
-        hard.setFont(font)
+        start.setFont(font)
 
         # Create Camera Index Fetching Thread
         self.camera_thread = CameraThread(self.max_cameras)
@@ -49,9 +45,7 @@ class MainWindow(QMainWindow):
         self.mode_box.addItems(["Select a Mode", "Camera", "Drawing"])
 
         # Set Button Functionalities
-        easy.clicked.connect(lambda: self.mode_playground("easy"))
-        med.clicked.connect(lambda: self.mode_playground("med"))
-        hard.clicked.connect(lambda: self.mode_playground("hard"))
+        start.clicked.connect(self.mode_playground)
 
         # Create Camera Selection Layout
         cam_layout = QHBoxLayout()
@@ -68,10 +62,8 @@ class MainWindow(QMainWindow):
         layout.addStretch(1)
         layout.addWidget(label_1, alignment=Qt.AlignmentFlag.AlignHCenter)
         layout.addWidget(label_2, alignment=Qt.AlignmentFlag.AlignHCenter)
-        layout.addWidget(easy)
-        layout.addWidget(med)
-        layout.addWidget(hard)
-        layout.addStretch(1)
+        layout.addWidget(start)
+        layout.addStretch(2)
 
         # Set Window Layout
         central_widget.setLayout(layout)
@@ -84,11 +76,11 @@ class MainWindow(QMainWindow):
         self.flag = True
 
     # Function to Open Camera Playgroubd
-    def mode_playground(self, mode: str):
-        self.check_mode_index(mode)
+    def mode_playground(self):
+        self.check_mode_index()
         
     # Function to Check Mode Index
-    def check_mode_index(self, mode):
+    def check_mode_index(self):
         if "Select" in self.mode_box.currentText():
             message = QMessageBox()
             message.setText("Please Select a Mode")
@@ -96,12 +88,12 @@ class MainWindow(QMainWindow):
             message.setIcon(QMessageBox.Icon.Information)
             message.exec()
         elif self.mode_box.currentText() == "Camera":
-            self.check_camera_index(mode)
+            self.check_camera_index()
         else:
-            self.check_for_drawing(mode)
+            self.check_for_drawing()
 
     # Function to Check for Camera Index
-    def check_camera_index(self, mode):
+    def check_camera_index(self):
         if not self.flag:
             message = QMessageBox()
             message.setText("Warning: Camera Fetching is not yet Finish")
@@ -110,20 +102,19 @@ class MainWindow(QMainWindow):
             message.exec()
         else:
             self.hide()
-            self.camera_window = CameraWindow(self.camera_box.currentText(), mode)
+            self.camera_window = CameraWindow(self.camera_box.currentText())
             self.camera_window.signal.connect(self.show)
             self.camera_window.show()
 
     # Function to Check for Drawing
-    def check_for_drawing(self, mode):
+    def check_for_drawing(self):
         self.hide()
-        self.draw = DrawingWindow(mode)
+        self.draw = DrawingWindow()
         self.draw.signal.connect(self.show)
         self.draw.show()
 
 class CameraThread(QThread):
     cameras_found = pyqtSignal(list)
-
     def __init__(self, max_cameras):
         super().__init__()
         self.max_cameras = max_cameras

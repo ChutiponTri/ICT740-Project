@@ -1,7 +1,6 @@
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog, QLabel, QVBoxLayout, QHBoxLayout, QWidget
 from PyQt6.QtGui import QIcon, QImage, QPainter, QAction , QPen, QFont
 from PyQt6.QtCore import Qt, QPoint, pyqtSignal
-from equation import Equation
 from api import API
 from io import BytesIO
 from PIL import Image
@@ -11,28 +10,25 @@ font = QFont("Cordia New", 16)
 
 class DrawingWindow(QMainWindow):
     signal = pyqtSignal()
-    def __init__(self, mode):
+    def __init__(self):
         super().__init__()
         # Create Window
         self.setWindowTitle("Paint")
         self.setWindowIcon(QIcon("icons/Tifa.jpg"))
         self.setGeometry(300, 200, 600, 600)
-        self.mode = mode
 
         # Create Buttons
-        random_button = QPushButton("Random")
+        clear_button = QPushButton("Clear")
         predict_button = QPushButton("Predict")
-        self.equation = QLabel("Equation: Unknown")
-        self.result = QLabel("")
+        self.result = QLabel("Press Predict Button to See Result")
 
         # Setting Button Font
-        random_button.setFont(font)
+        clear_button.setFont(font)
         predict_button.setFont(font)
-        self.equation.setFont(font)
         self.result.setFont(font)
 
         # Button Functionalities
-        random_button.clicked.connect(self.random_equation)
+        clear_button.clicked.connect(self.clear_label)
         predict_button.clicked.connect(self.predict)
 
         # Create Actions
@@ -104,13 +100,12 @@ class DrawingWindow(QMainWindow):
 
         # Button Layout
         button_layout = QHBoxLayout()
-        button_layout.addWidget(random_button)
         button_layout.addWidget(predict_button)
+        button_layout.addWidget(clear_button)
         button_layout.addStretch(1)
 
         # Predict Layout
         pred_layout = QHBoxLayout()
-        pred_layout.addWidget(self.equation)
         pred_layout.addWidget(self.result)
 
         # Layout
@@ -125,13 +120,6 @@ class DrawingWindow(QMainWindow):
 
         # Set container as central widget
         self.setCentralWidget(container)
-
-    # Function to Generate Random Equation
-    def random_equation(self):
-        equation = Equation.random(self.mode)
-        self.equation.setText(equation)
-        self.result.setText("")
-        self.clear()
 
     # Function to Request API Prediction
     def predict(self):
@@ -153,11 +141,14 @@ class DrawingWindow(QMainWindow):
     def update_label(self, data):
         print(data)
         if "prediction" in data.keys():
-            if "Unknown" not in self.equation.text():
-                equation = self.equation.text()
-                self.equation.setText(f"{equation} = {eval(equation)}")
             result = data["prediction"]
+            result = ", ".join(result)
             self.result.setText(f"Prediction Result: {result}")
+
+    # Function to Clear Label
+    def clear_label(self):
+        self.clear()
+        self.result.setText("Press Predict Button to See Result")
 
     # Function for Mouse Press Event
     def mousePressEvent(self, event):
