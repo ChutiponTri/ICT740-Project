@@ -10,11 +10,11 @@ The project is organized into several folders and files:
 - **`api.py`**: Contains a class for making requests to the backend API, which is linked with the number recognition model.
 - **`camera.py`**: Implements a camera window for capturing images, which are sent to the backend for classification.
 - **`draw.py`**: Provides a window for drawing or writing numbers, which are then sent to the backend for classification.
-- **`equation.py`**: A class for generating random equations (custom library).
 - **`main.py`**: Main entry point for the UI, allowing the user to select modes and choose the camera.
 
 ### Backend Folder
 - **`AI.py`**: Connects with the model to perform classification on the input data.
+- **`model.py`** Connects with the model to perform classification of the input data.
 - **`backend.py`**: Runs the FastAPI backend server, which handles classification requests.
 
 ### Model Folder
