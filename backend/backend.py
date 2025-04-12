@@ -1,16 +1,14 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
-from AI import Layer_Dense, Activation_ReLU, AI
 from PIL import Image
 import numpy as np
+from model import Model
 import uvicorn
 import json
 import io
 
 app = FastAPI()
-dense1 = Layer_Dense(784, 128)
-dense2 = Layer_Dense(128, 10)
-a1 = Activation_ReLU()
+model = Model()
 
 @app.get("/")
 async def root():
@@ -20,8 +18,8 @@ async def root():
 async def classify(file: UploadFile = File(...)):
     try:
         # Read and preprocess image
-        image = Image.open(io.BytesIO(await file.read())).convert("L").resize((28, 28))
-        prediction = AI(image, dense1, dense2, a1)
+        image = Image.open(io.BytesIO(await file.read())).convert("L").resize((64, 64))
+        prediction = model.run(image)
         return JSONResponse(content={"prediction": prediction})
     
     except Exception as e:
