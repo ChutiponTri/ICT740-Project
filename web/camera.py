@@ -1,6 +1,5 @@
 import streamlit as st
 from streamlit.runtime.scriptrunner_utils.script_run_context import add_script_run_ctx
-from streamlit_drawable_canvas import st_canvas
 from threading import Thread
 from io import BytesIO
 from PIL import Image
