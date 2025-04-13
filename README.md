@@ -17,6 +17,12 @@ The project is organized into several folders and files:
 - **`model.py`** Connects with the model to perform classification of the input data.
 - **`backend.py`**: Runs the FastAPI backend server, which handles classification requests.
 
+### Web Folder
+- **`AI.py`**: Connects with the model to perform classification on the input data.
+- **`camera.py`**: Implements a camera page for capturing images, which are sent to the backend for classification.
+- **`draw.py`**: Provides a page for drawing or writing numbers, which are then sent to the backend for classification.
+- **`web.py`**: Main entry point for the Web UI, allowing the user to select modes and choose the camera.
+
 ### Model Folder
 Contains the pre-trained model used for classification.
 
