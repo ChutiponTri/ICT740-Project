@@ -48,6 +48,12 @@ To run the backend, make sure to navigate to the root directory of the project a
 python backend/backend.py
 ```
 
+### Web UI
+To run the web ui, make sure to navigate to the root directory of the project and then start the Streamlit service:
+```bash
+streamlit run web/web.py
+```
+
 ## Notes
 - The backend service must be run from the root directory to work correctly.
 - The frontend uses camera capture and drawing windows, allowing the user to interact with the number recognition system.
