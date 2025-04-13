@@ -55,5 +55,5 @@ streamlit run web/web.py
 ```
 
 ## Notes
-- The backend service must be run from the root directory to work correctly.
+- The backend and web services must be run from the root directory to work correctly.
 - The frontend uses camera capture and drawing windows, allowing the user to interact with the number recognition system.
