@@ -1,12 +1,14 @@
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog, QLabel, QVBoxLayout, QHBoxLayout, QWidget
-from PyQt6.QtGui import QIcon, QImage, QPainter, QAction , QPen, QFont
+from PyQt6.QtGui import QIcon, QImage, QPainter, QAction , QPen, QFont, QIcon
 from PyQt6.QtCore import Qt, QPoint, pyqtSignal
 from api import API
 from io import BytesIO
 from PIL import Image
 import sys
+import os
 
-font = QFont("Cordia New", 16)
+font = QFont("Arial", 14)
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 class DrawingWindow(QMainWindow):
     signal = pyqtSignal()
@@ -14,8 +16,10 @@ class DrawingWindow(QMainWindow):
         super().__init__()
         # Create Window
         self.setWindowTitle("Paint")
-        self.setWindowIcon(QIcon("icons/Tifa.jpg"))
+        # self.setWindowIcon(QIcon("icons/Tifa.jpg"))
         self.setGeometry(300, 200, 600, 600)
+        window_icon = os.path.join(script_dir, "icons", "kitty.png")
+        self.setWindowIcon(QIcon(window_icon))    
 
         # Create Buttons
         clear_button = QPushButton("Clear")
@@ -30,6 +34,34 @@ class DrawingWindow(QMainWindow):
         # Button Functionalities
         clear_button.clicked.connect(self.clear_label)
         predict_button.clicked.connect(self.predict)
+
+        # Button style
+        clear_button.setStyleSheet("""
+            QPushButton {
+                background-color: #4CAF50; /* Green */
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+            }
+            QPushButton:hover {
+                background-color: #45a049; /* Darker green */
+            }
+        """)
+        predict_button.setStyleSheet("""
+            QPushButton {
+                background-color: #008CBA; /* Blue */
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+            }
+            QPushButton:hover {
+                background-color: #007bb5; /* Darker blue */
+            }
+        """)
 
         # Create Actions
         save_action = QAction(QIcon("icons/Dummy.jpg"), "Save", self)

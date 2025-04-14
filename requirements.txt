@@ -1,6 +1,9 @@
 PyQt6
+streamlit
+streamlit_drawable_canvas
 opencv-contrib-python
 fastapi[standard]
 pandas
 numpy
+Pillow
 tensorflow

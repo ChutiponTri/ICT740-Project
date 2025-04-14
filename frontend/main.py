@@ -1,12 +1,14 @@
 from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QComboBox, QHBoxLayout, QPushButton, QLabel, QMessageBox
 from PyQt6.QtCore import pyqtSignal, QThread, Qt
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont, QIcon, QPixmap
 from camera import CameraWindow
 from draw import DrawingWindow
 import cv2
 import sys
+import os
 
-font = QFont("Cordia New", 16)
+font = QFont("Arial", 16)
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 class MainWindow(QMainWindow):
     max_cameras = 2
@@ -16,25 +18,63 @@ class MainWindow(QMainWindow):
         super().__init__()
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-        self.setWindowTitle("MainWindow")
+        self.setWindowTitle("Draw Anything  Let AI Guess  Have Fun")
 
         # Create Elements
         camera_label = QLabel("Please Select Camera")
         self.camera_box = QComboBox()
         mode_label = QLabel("Please Select Mode")
         self.mode_box = QComboBox()
-        label_1 = QLabel("Welcome to our Program")
-        label_2 = QLabel("Please Press Start when You are Ready")
+
+        robot_label = QLabel()
+        robot_icon_path = os.path.join(script_dir, "icons", "robot.png")
+        robot_pixmap = QPixmap(robot_icon_path)
+        robot_pixmap = robot_pixmap.scaled(250, 250, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        robot_label.setPixmap(robot_pixmap)
+     
+        label_1 = QLabel("Welcome! Ready to play?")
+        label_2 = QLabel("Choose a mode and camera, then hit Start to begin!")
         start = QPushButton("Start")
 
         # Set Elements Font
-        label_1.setFont(QFont("Cordia New", 20, QFont.Weight.Bold))
-        label_2.setFont(QFont("Cordia New", 20, QFont.Weight.Bold))
+        label_1.setFont(QFont("Arial", 18, QFont.Weight.Bold))
+        label_2.setFont(QFont("Arial", 18, QFont.Weight.Bold))
         mode_label.setFont(font)
         self.mode_box.setFont(font)
         camera_label.setFont(font)
         self.camera_box.setFont(font)
         start.setFont(font)
+
+        # Apply QSS Stylesheet
+        self.setStyleSheet("""
+            QMainWindow {
+                background-color: #f0f0f0;
+            }
+            QLabel {
+                color: #333;
+            }
+            QComboBox {
+                background-color: #fff;
+                border: 1px solid #ccc;
+                padding: 5px;
+            }
+                           
+            QPushButton {
+                background-color: #4CAF50;
+                color: white;
+                font-size: 20px;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 10px;
+            }
+            QPushButton:hover {
+                background-color: #45a049;
+            }
+        """)
+
+        # Set Window Icon
+        window_icon = os.path.join(script_dir, "icons", "kitty.png")
+        self.setWindowIcon(QIcon(window_icon))    
 
         # Create Camera Index Fetching Thread
         self.camera_thread = CameraThread(self.max_cameras)
@@ -60,10 +100,13 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout()
         layout.addLayout(cam_layout)
         layout.addStretch(1)
+        layout.addWidget(robot_label, alignment=Qt.AlignmentFlag.AlignHCenter)
         layout.addWidget(label_1, alignment=Qt.AlignmentFlag.AlignHCenter)
         layout.addWidget(label_2, alignment=Qt.AlignmentFlag.AlignHCenter)
         layout.addWidget(start)
         layout.addStretch(2)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(15)
 
         # Set Window Layout
         central_widget.setLayout(layout)

@@ -1,14 +1,15 @@
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSizePolicy
 from PyQt6.QtCore import QThread, pyqtSignal, Qt
-from PyQt6.QtGui import QImage, QPixmap, QFont
+from PyQt6.QtGui import QImage, QPixmap, QFont,QIcon
 from io import BytesIO
 from PIL import Image
 from api import API
 import time
 import cv2
-import sys
+import os
 
-font = QFont("Cordia New", 16)
+font = QFont("Arial", 14)
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 class CameraWindow(QMainWindow):
     signal = pyqtSignal()
@@ -16,6 +17,9 @@ class CameraWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Camera Feed")
         self.setGeometry(100, 100, 800, 600)
+        window_icon = os.path.join(script_dir, "icons", "kitty.png")
+        self.setWindowIcon(QIcon(window_icon))    
+        
         try:
             index = int(index)
         except ValueError:
@@ -35,6 +39,34 @@ class CameraWindow(QMainWindow):
         clear_button.setFont(font)
         predict_button.setFont(font)
         self.result.setFont(font)
+
+        # Button Style
+        clear_button.setStyleSheet("""
+        QPushButton {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        QPushButton:hover {
+            background-color: #45a049; /* Darker green */
+        }
+        """)
+        predict_button.setStyleSheet("""
+            QPushButton {
+                background-color: #008CBA; /* Blue */
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+            }
+            QPushButton:hover {
+                background-color: #007bb5; /* Darker blue */
+            }
+        """)
 
         # Setting Video Label
         self.videoLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
